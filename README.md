@@ -1,19 +1,19 @@
-
+````markdown
 # 🚀 OpenVPN Access Server Docker Installer (Debian Bookworm)
 
 This repository provides a one-shot script (`docker.sh`) to install Docker on **Debian 12 (Bookworm)** and deploy the **OpenVPN Access Server** inside a Docker container.
 
 ---
 
-## 📦 What's Included?
+## 📦 Features
 
-- Installs Docker CE and required plugins on Debian Bookworm
+- Installs Docker CE and required plugins on Debian 12 (Bookworm)
 - Pulls the official `openvpn/openvpn-as` image
-- Runs the container with:
+- Runs container with:
   - Proper TUN device access
-  - Required `NET_ADMIN` and `MKNOD` capabilities
+  - `NET_ADMIN` and `MKNOD` capabilities
   - Volume binding for config persistence
-- Automatically restarts container on reboot/crash
+- Automatically restarts container on reboot or crash
 
 ---
 
@@ -27,79 +27,81 @@ This repository provides a one-shot script (`docker.sh`) to install Docker on **
 
 ## 🧪 Installation & Usage
 
-1. Clone this repository:
+1. **Clone this repository**  
    ```bash
    git clone https://github.com/<your-username>/openvpn-access-docker.git
    cd openvpn-access-docker
 ````
 
-2. Make the script executable:
+2. **Make the installer executable**
 
    ```bash
    chmod +x docker.sh
    ```
 
-3. Run the script:
+3. **Run the installer**
 
    ```bash
-   ./docker.sh
+   sudo ./docker.sh
    ```
 
 ---
 
 ## 🌐 Access the Admin Web UI
 
-Once the container is up:
+Once the container is up and running:
 
-* Admin UI:
-  `https://<your-server-ip>:943/admin`
+* **Admin UI:**
 
-> ⚠️ Accept the browser's self-signed certificate warning to continue.
+  ```
+  https://<your-server-ip-or-domain>:943/admin
+  ```
+
+> ⚠️ You’ll see a self-signed certificate warning—accept it to proceed.
 
 ---
 
-## 🔐 Retrieve Admin Password
+## 🔐 Retrieve the Admin Password
 
-Run:
+To view the auto-generated password:
 
 ```bash
-sudo docker logs -f openvpn-as | grep 'Auto-generated pass'
+sudo docker logs openvpn-as 2>&1 | grep 'Auto-generated pass'
 ```
 
 ---
 
 ## 📁 Persistent Data
 
-Container config is stored in:
+All configuration and state are stored in:
 
-```bash
+```
 /opt/openvpn_data
 ```
 
-You can back up or mount this folder to retain settings across container restarts or upgrades.
+Backup or bind-mount this directory to retain settings across upgrades or host rebuilds.
 
 ---
 
 ## 🧯 Troubleshooting
 
-* Make sure `/dev/net/tun` exists on the host.
-* Ensure ports 943, 443, and 1194/udp are open in your firewall.
-* Restart container if needed:
+* Ensure `/dev/net/tun` exists on the host:
+
+  ```bash
+  sudo mkdir -p /dev/net
+  sudo mknod /dev/net/tun c 10 200
+  sudo chmod 600 /dev/net/tun
+  ```
+* Open required firewall ports:
+
+  * TCP 943 (Admin UI)
+  * TCP 443 (Client UI)
+  * UDP 1194 (VPN data)
+* To restart the container manually:
 
   ```bash
   sudo docker restart openvpn-as
   ```
 
 ---
-
-## 📜 License
-
-MIT License — free to use and modify.
-
-```
-
----
-
-Let me know if you also want to include a `docker-compose.yml` and update the README to reflect that option.
-
 
