@@ -28,7 +28,7 @@ This repository provides a one-shot script (`docker.sh`) to install Docker on **
 
 1. **Clone this repository**  
    ```bash
-   git clone https://github.com/<your-username>/openvpn-access-docker.git
+   git clone https://github.com/srimankatipally/OpenVpndocker.git
    cd openvpn-access-docker
    ```
 
